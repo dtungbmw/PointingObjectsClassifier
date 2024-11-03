@@ -1,0 +1,24 @@
+POST /_security/api_key
+{
+  "name": "my-api-key",
+  "expiration": "9000000d",
+  "role_descriptors": {
+    "role-a": {
+      "cluster": ["all"],
+      "indices": [
+        {
+          "names": ["*"],
+          "privileges": ["all"]
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "application": "my-application",
+    "environment": {
+       "level": 1,
+       "trusted": true,
+       "tags": ["dev", "staging"]
+    }
+  }
+}

@@ -1,0 +1,35 @@
+PUT /ml_confusion_matrix
+{
+  "mappings": {
+    "properties": {
+      "actual": {
+        "type": "text"
+      },
+      "predicted": {
+        "type": "text"
+      },
+      "probability": {
+        "type": "float"
+      },
+      "user_id": {
+        "type": "keyword"
+      },
+      "exp_id": {
+        "type": "keyword"
+      },
+      "run_id": {
+        "type": "keyword"
+      },
+      "model_id": {
+        "type": "keyword"
+      },
+      "created_at": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||epoch_millis"
+      },
+      "location": {
+        "type": "geo_point"
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+defaults:
+  - data: CP
+  - model: CP-base
+  - hardware: full
+  - _self_
+
+dataset_name: "PCDataset"
+data_root: "data/frames/"
+label_root: "data/labels/"
+keypoints_root: "data/keypoints/"
+venue_names:
+- "2023-01-17-livingroom"
+- "2023-01-18-livingroom"
+- "2023-01-19-livingroom"
+- "2023-01-24-livingroom"
+- "2023-01-25-livingroom"
+- "2023-01-17-openoffice"
+- "2023-01-18-openoffice"
+- "2023-01-19-openoffice"
+- "2023-01-24-openoffice"
+- "2023-01-25-openoffice"
+
+task: train
+incl_all: false
+train_ratio: 0.7
+split_method: time
+overfit: false
+ckpt: null
+noanswer: false
+
+movie: null
+lr: null
+verbose: false
+shrink_rate: 0.1
+filter_joint: null # null, 'hand' or 'handhead'
+use_preprocessed: false
+debug: false
+hist_error: false
+
+
+
