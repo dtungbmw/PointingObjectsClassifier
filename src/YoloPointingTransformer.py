@@ -50,32 +50,6 @@ class TransformerPointingClassifier(nn.Module):
     
 
 
-class PointingDataset(Dataset):
-    def __init__(self, data, transform=None):
-        """
-        Args:
-            data: A list of tuples (image_path, pointing_vector, label) 
-            transform: Transformations to apply to the image
-        """
-        self.data = data
-        self.transform = transform or transforms.ToTensor()
-    
-    def __len__(self):
-        return len(self.data)
-    
-    def __getitem__(self, idx):
-        image_path, pointing_vector, label = self.data[idx]
-        
-        # Load image
-        image = Image.open(image_path).convert("RGB")
-        image = self.transform(image)
-        
-        # Convert pointing vector and label to tensors
-        pointing_vector = torch.tensor(pointing_vector, dtype=torch.float32)
-        label = torch.tensor(label, dtype=torch.long)
-        
-        return image, pointing_vector, label
-
 
 class TransformerPointingPredictor:
     
@@ -111,7 +85,7 @@ class TransformerPointingPredictor:
     
 class TransformerPointingTrainer:
     
-    def train(self):
+    def train(self, dataloader: DataLoader):
         # Define transformations
         transform = transforms.Compose([
             transforms.Resize((640, 640)),
@@ -119,9 +93,9 @@ class TransformerPointingTrainer:
         ])
 
         # Create dataset and dataloader
-        dataset = PointingDataset(data, transform=transform)
-        dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
-                # Initialize model, loss, and optimizer
+        #dataset = PointingDataset(data, transform=transform)
+        #dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
+        # Initialize model, loss, and optimizer
         model = TransformerPointingClassifier(num_classes=10)  # Adjust `num_classes` as needed
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=1e-4)
