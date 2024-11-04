@@ -1,11 +1,10 @@
 import torch
 import torch.nn as nn
 from ultralytics import YOLO
-import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from PIL import Image
-from praxis.pc_dataset import *
+from pc_dataset import *
 
 class TransformerPointingClassifier(nn.Module):
     def __init__(self, num_classes=10, embed_dim=256, nhead=8, num_encoder_layers=4, num_decoder_layers=4):
