@@ -5,6 +5,8 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from PIL import Image
 from src.pc_dataset import *
+import torch.optim as optim
+
 
 class TransformerPointingClassifier(nn.Module):
     def __init__(self, num_classes=10, embed_dim=256, nhead=8, num_encoder_layers=4, num_decoder_layers=4):
@@ -24,6 +26,11 @@ class TransformerPointingClassifier(nn.Module):
         
         # Classification head
         self.classifier = nn.Linear(embed_dim, num_classes)
+        
+    def enable_training(self):
+        # Ensure that only the transformer and your classification layers are set to train mode
+        self.transformer.train()
+        self.classifier.train()
     
     def forward(self, image, pointing_vector):
         # Run YOLOv8 on the image to get detected object features
@@ -85,16 +92,13 @@ class TransformerPointingPredictor:
     
 class TransformerPointingTrainer:
     
-    def train(self, dataloader: DataLoader):
+    def launch_training(self, dataloader: DataLoader):
         # Define transformations
         transform = transforms.Compose([
             transforms.Resize((640, 640)),
             transforms.ToTensor()
         ])
 
-        # Create dataset and dataloader
-        #dataset = PointingDataset(data, transform=transform)
-        #dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
         # Initialize model, loss, and optimizer
         model = TransformerPointingClassifier(num_classes=10)  # Adjust `num_classes` as needed
         criterion = nn.CrossEntropyLoss()
@@ -104,7 +108,7 @@ class TransformerPointingTrainer:
         num_epochs = 10  # Number of epochs
 
         for epoch in range(num_epochs):
-            model.train()
+            model.enable_training()
             running_loss = 0.0
             
             for i, (images, pointing_vectors, labels) in enumerate(dataloader):

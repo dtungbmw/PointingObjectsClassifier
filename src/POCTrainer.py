@@ -50,5 +50,5 @@ class POCTrainer:
         
         transformer_trainer = TransformerPointingTrainer()
         
-        transformer_trainer.train(dataloader)
+        transformer_trainer.launch_training(dataloader)
         pass
