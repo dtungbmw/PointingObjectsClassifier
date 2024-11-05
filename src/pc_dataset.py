@@ -236,12 +236,12 @@ class PCDataset(Dataset):
 
         self.action_class_dict = {0: [-1], 1: list(range(0, 100))}
         self.num_classes = len(self.action_class_dict)
-        '''
+        
         with (keypoints_path / "triangulation.pickle").open("rb") as f:
             self.coords = pickle.load(f)
         with (keypoints_path / "collected_json.pickle").open("rb") as f:
             self.collected_pifpaf_json = pickle.load(f)
-        '''
+        
         self.NON_POINTING_ACTIONID = -1
 
         self.rev_action_class_dict = {
@@ -255,16 +255,14 @@ class PCDataset(Dataset):
         self.markerdict = dict()
         self.jointcoords_dict = dict()
         self.cameraparam_dict = dict()
-        data_root_path = Path(os.getcwd()).parent / cfg.data_root 
-        label_root_path = Path(os.getcwd()).parent / cfg.label_root 
 
         # for each venues, Process annotations
-        for venue_name in cfg.venue_names:
+        for venue_name in cfg.data.venue_names:
             venue_path, label_dir = (
-                str(data_root_path) + venue_name,
-                str(label_root_path) + venue_name
-                #cfg.data_root + venue_name,
-                #cfg.label_root + venue_name,
+                ##tr(data_root_path) + "/"+venue_name,
+                #str(label_root_path) + venue_name
+                cfg.data.data_root + venue_name,
+                cfg.data.label_root + venue_name,
             )
             joint_coords = self.coords[Path(venue_path).name]
             pifpaf_annotation = self.collected_pifpaf_json[Path(venue_path).name]

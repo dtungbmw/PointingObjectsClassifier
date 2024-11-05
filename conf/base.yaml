@@ -11,6 +11,7 @@ split_method: time
 overfit: false
 ckpt: null
 noanswer: false
+DEVICE: null
 
 movie: null
 lr: null

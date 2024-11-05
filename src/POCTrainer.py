@@ -33,7 +33,7 @@ class POCTrainer:
             cfg.task == "test" and cfg.ckpt is None
         ), "checkpoint should be specified for evaluation"
         
-        keypoints_path = Path(os.getcwd()).parent / cfg.keypoints_root
+        keypoints_path = Path(os.getcwd()) / cfg.data.keypoints_root
         print("Set up training dataset...")
         train_ds = PCDataset(keypoints_path, cfg)
         print("Create training dataloader...")
