@@ -105,7 +105,7 @@ class TransformerPointingTrainer:
         optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
         # Training loop
-        num_epochs = 10  # Number of epochs
+        num_epochs = 1  # Number of epochs
 
         for epoch in range(num_epochs):
             model.enable_training()
@@ -116,16 +116,17 @@ class TransformerPointingTrainer:
                 images = images.to("cuda" if torch.cuda.is_available() else "cpu")
                 pointing_vectors = pointing_vectors.to("cuda" if torch.cuda.is_available() else "cpu")
                 labels = labels.to("cuda" if torch.cuda.is_available() else "cpu")
+                print(f"training... {epoch}")
                 
                 # Zero the gradients
                 optimizer.zero_grad()
                 
                 # Forward pass
                 outputs = model(images, pointing_vectors)
-                
+                print(f"loss... {epoch}")
                 # Compute loss
                 loss = criterion(outputs, labels)
-                
+                print(f"backward... {epoch}")
                 # Backward pass and optimization
                 loss.backward()
                 optimizer.step()
