@@ -4,7 +4,7 @@ from ultralytics import YOLO
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from PIL import Image
-from src.pc_dataset import *
+from pc_dataset import *
 import torch.optim as optim
 
 

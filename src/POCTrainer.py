@@ -1,12 +1,12 @@
 from omegaconf import DictConfig, OmegaConf
 from torch.utils.data import DataLoader, WeightedRandomSampler, Subset
-from src.pc_dataset import *
+from pc_dataset import *
 from pathlib import Path
 import logging
 import torch
 import os
 from pathlib import Path
-from src.YoloPointingTransformer import TransformerPointingTrainer
+from YoloPointingTransformer import TransformerPointingTrainer
 import logging
 
 
