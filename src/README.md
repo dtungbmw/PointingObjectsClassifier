@@ -20,8 +20,11 @@ pip install opencv-contrib-python
 
 pip install opencv-python
 
-pip install torch
 
+# for GPU
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+pip install torch
 pip install torchvision 
 
 pip install numpy
@@ -29,6 +32,8 @@ pip install numpy
 pip install scipy
 
 pip install dataset
+
+pip install pytorch_lightning
 
 pip install hydra-core
 

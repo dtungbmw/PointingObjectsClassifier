@@ -98,7 +98,7 @@ class TransformerPointingTrainer:
             transforms.Resize((640, 640)),
             transforms.ToTensor()
         ])
-
+        print(f"** launch_training... ")
         # Initialize model, loss, and optimizer
         model = TransformerPointingClassifier(num_classes=10)  # Adjust `num_classes` as needed
         criterion = nn.CrossEntropyLoss()
@@ -106,27 +106,27 @@ class TransformerPointingTrainer:
 
         # Training loop
         num_epochs = 1  # Number of epochs
-
+        print(f"** for epoch... ")
         for epoch in range(num_epochs):
             model.enable_training()
             running_loss = 0.0
-            
+            print(f"** for i... ")
             for i, (images, pointing_vectors, labels) in enumerate(dataloader):
                 # Move data to device (e.g., GPU if available)
                 images = images.to("cuda" if torch.cuda.is_available() else "cpu")
                 pointing_vectors = pointing_vectors.to("cuda" if torch.cuda.is_available() else "cpu")
                 labels = labels.to("cuda" if torch.cuda.is_available() else "cpu")
-                print(f"training... {epoch}")
+                print(f"training... {i}, {epoch}")
                 
                 # Zero the gradients
                 optimizer.zero_grad()
                 
                 # Forward pass
                 outputs = model(images, pointing_vectors)
-                print(f"loss... {epoch}")
+                print(f"loss... {i}, {epoch}")
                 # Compute loss
                 loss = criterion(outputs, labels)
-                print(f"backward... {epoch}")
+                print(f"backward... {i}, {epoch}")
                 # Backward pass and optimization
                 loss.backward()
                 optimizer.step()

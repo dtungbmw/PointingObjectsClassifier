@@ -8,6 +8,9 @@ import os
 from pathlib import Path
 from YoloPointingTransformer import TransformerPointingTrainer
 import logging
+from timeit import default_timer as timer
+from poc_timer import *
+
 
 
 class POCTrainer:
@@ -19,6 +22,7 @@ class POCTrainer:
                     handlers=[logging.StreamHandler()])  # Default handler (outputs to console)
 
 
+    @measure_time
     def setup_dataloader(self, cfg: DictConfig) -> DataLoader:
 
         DEVICE = cfg.DEVICE
@@ -46,6 +50,7 @@ class POCTrainer:
         )
         return train_dl
     
+    @measure_time
     def launch_training(self, dataloader: DataLoader):
         
         transformer_trainer = TransformerPointingTrainer()

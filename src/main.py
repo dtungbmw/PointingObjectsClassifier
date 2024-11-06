@@ -13,6 +13,8 @@ from omegaconf import DictConfig
 from hydra import initialize_config_dir, compose
 from pathlib import Path
 import os
+from poc_timer import *
+
 
 
 @hydra.main(version_base=None, config_path="../conf", config_name="base")
@@ -25,14 +27,6 @@ def main(cfg: DictConfig) -> None:
         + "==================================================\n"
     )
 
-    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-    if DEVICE == "cpu" and cfg.task == "train":
-        logging.warning("Training DeePoint with CPU takes a long time.")
-    cfg.DEVICE = DEVICE
-    if cfg.task == "test" and cfg.verbose is not True and cfg.shrink_rate != 1:
-        logging.warning(
-            "Using only part of test dataset. You should set `shrink_rate=1` except for speeding up the performance for visualization"
-        )
     trainer = POCTrainer()
     dl = trainer.setup_dataloader(cfg)
     print(cfg)    
