@@ -6,10 +6,20 @@ from torchvision import transforms
 from PIL import Image
 from pc_dataset import *
 import torch.optim as optim
+import torch.nn.functional as F
+
+coco_class_map = {
+    "person": 0,
+    "bicycle": 1,
+    "car": 2,
+    # ... other classes
+    "lamp": 71,
+    # ... more classes
+}
 
 
 class TransformerPointingClassifier(nn.Module):
-    def __init__(self, num_classes=10, embed_dim=256, nhead=8, num_encoder_layers=4, num_decoder_layers=4):
+    def __init__(self, num_classes=3, embed_dim=256, nhead=8, num_encoder_layers=4, num_decoder_layers=4):
         super(TransformerPointingClassifier, self).__init__()
         
         # YOLOv8 for object detection
@@ -34,9 +44,18 @@ class TransformerPointingClassifier(nn.Module):
     
     def forward(self, image, pointing_vector):
         # Run YOLOv8 on the image to get detected object features
-        yolo_results = self.yolo(image)
+        yolo_results = self.yolo(image, classes=[coco_class_map["lamp"]])
         boxes = yolo_results[0].boxes  # Detected boxes
-        object_features = [box.feats for box in boxes]  # Extract YOLOv8 features
+        #object_features = [box.feats for box in boxes]  # Extract YOLOv8 features
+        object_features = []
+        for box in boxes: # should be one
+            # Extract bounding box, confidence, and class information
+            bbox = torch.tensor(getattr(box, "xyxy", None))  # or use xywh depending on your format
+            conf = getattr(box, "conf", None)
+            cls = torch.tensor(getattr(box, "cls", None))
+            # Collect information
+            object_features_tensor = torch.cat((bbox, cls.unsqueeze(1)), dim=1)
+            object_features.append(object_features_tensor)
         
         # Project YOLO features to transformer input dimension and stack them
         object_embeddings = torch.stack([self.yolo_feature_proj(f) for f in object_features]).unsqueeze(1)
@@ -92,6 +111,14 @@ class TransformerPointingPredictor:
     
 class TransformerPointingTrainer:
     
+    def transform_image(self, input_tensor):
+        # Remove extra dimension
+        input_tensor = input_tensor.squeeze(1)  # Shape now (1, 3, 2028, 2704)
+
+        # Resize to (1, 3, 640, 640)
+        input_tensor = F.interpolate(input_tensor, size=(640, 640), mode='bilinear', align_corners=False)
+        return input_tensor
+    
     def launch_training(self, dataloader: DataLoader):
         # Define transformations
         transform = transforms.Compose([
@@ -115,13 +142,14 @@ class TransformerPointingTrainer:
                 # Move data to device (e.g., GPU if available)
                 images = images.to("cuda" if torch.cuda.is_available() else "cpu")
                 pointing_vectors = pointing_vectors.to("cuda" if torch.cuda.is_available() else "cpu")
-                labels = labels.to("cuda" if torch.cuda.is_available() else "cpu")
+                #labels = labels.to("cuda" if torch.cuda.is_available() else "cpu")
                 print(f"training... {i}, {epoch}")
                 
                 # Zero the gradients
                 optimizer.zero_grad()
                 
                 # Forward pass
+                images = self.transform_image(images)
                 outputs = model(images, pointing_vectors)
                 print(f"loss... {i}, {epoch}")
                 # Compute loss

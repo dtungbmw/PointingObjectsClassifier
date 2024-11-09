@@ -1,4 +1,4 @@
-tlength: 15
+tlength: 1
 featvec_joint: true
 hidden_size: 192
 attention_heads: 12

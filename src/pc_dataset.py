@@ -450,7 +450,10 @@ class PCDataset(Dataset):
             camera_param["filepath"] = str(
                 camera_param["filepath"]
             )  # PosixPathはcollateできないので文字列に変える
-
+        
+        return images, direction, 0
+    
+    '''
         return {
             "idx": idx,
             "venue_path": venue_path,
@@ -473,7 +476,8 @@ class PCDataset(Dataset):
             "camera_param": camera_param,
             "frames": frames,
         }
-
+    '''
+    
     def __len__(self):
         return len(self.datalist)
 
